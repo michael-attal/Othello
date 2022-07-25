@@ -18,5 +18,8 @@ class GameConsoleView(GameView):
     def draw_board(self):
         self.board_view.draw_board()
 
-    def display_winner(self, player):
-        print(player)
+    def display_not_valid_move(self):
+        print("Error! Please enter a correct move")
+
+    def display_winner(self, player: Player):
+        print(f"Congratualition {player.name}, you win!")

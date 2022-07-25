@@ -14,5 +14,9 @@ class GameView(ABC):
         pass
 
     @abstractmethod
+    def display_not_valid_move(self):
+        pass
+
+    @abstractmethod
     def display_winner(self, player):
         pass

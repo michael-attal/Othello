@@ -8,19 +8,17 @@ class GameController:
         self.view = gameView
 
     def run_game(self):
-        while True:
+        while not self.model.rules.is_game_over(self.model.board):
             self.view.draw_board()
 
             row, col = self.view.get_move(self.model.curr_player)
             while not self.model.rules.is_valid_move(row, col):
-                # TODO display error message in the view
-                print("Error! Please enter a correct move")
-                row, col = self.view.get_move()
+                self.view.display_not_valid_move(player)
+                row, col = self.view.get_move(self.model.curr_player)
 
             self.model.make_move(row, col, self.model.curr_player)
-            player = self.model.check_winner()
-            if player:
-                self.view.display_winner(player)
-                break
-
             self.model.change_player()
+
+        player = self.model.rules.get_winner()
+        if player:
+            self.view.display_winner(player)

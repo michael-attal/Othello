@@ -13,10 +13,6 @@ class Game:
     def make_move(self, row, col, player: Player):
         self.board.update_cell(row, col, player)
 
-    def check_winner(self):
-        # TODO
-        pass
-
     def change_player(self):
         if self.curr_player == self.players[0]:
             self.curr_player = self.players[1]

@@ -11,7 +11,7 @@ class GamesRules(ABC):
         self.current_player = current_player
 
     @abstractclassmethod
-    def is_valid_move(self, board, disk):
+    def is_valid_move(self, row, col):
         pass
 
     @abstractclassmethod
