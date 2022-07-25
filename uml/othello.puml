@@ -1,0 +1,112 @@
+@startuml Othello Diagram
+
+' class Disk {
+'     - color: Color
+'     - position: Position
+
+'     + Disk(color: Color, position: Position)
+'     + get_color(): Color
+'     + get_position(): Position
+'     + set_position(position: Position): void
+' }
+
+' class Position {
+'     - x: int
+'     - y: int
+
+'     + Position(x: int, y: int)
+'     + get_x(): int
+'     + get_y(): int
+' }
+
+' class Color {
+'     - name: string
+
+'     + get_name(): string
+' }
+
+class Board {
+    - size: int
+    - number_of_disk_to_start: int
+    - players: list of Player
+    - disks: list of Disk
+}
+
+abstract class Player {
+    - name: string
+    - symbol: string 
+}
+
+Human <|-- Player
+class Human {
+
+}
+
+IA <|-- Player
+class IA {
+
+}
+
+abstract class GameRules {
+    - board: Board
+    - players: list of Player
+
+    + is_valid_move(board: Board, disk: Disk): boolean
+    + get_valid_moves(board: Board, disk: Disk): list of Position
+    + is_game_over(board: Board): boolean
+    + get_winner(board: Board): Player
+}
+
+ClassicRules <|-- GameRules
+class ClassicRules {
+    + ClassicRules(board: board, players: list of Player)
+}
+
+' abstract class UserInterface {
+'     - board: Board
+'     - rules: GamesRules
+'     - players: list of Player
+'     - game_state: string
+'     - player_turn : Player
+
+
+' }
+
+' ConsoleUserInterface <|-- UserInterface
+' class ConsoleUserInterface {
+'     + ConsoleUserInterface(board: board, rules: rules,  list of Player: players, player_turn: players[0])
+' }
+
+class Game {
+    - board: Board
+    - rules: GameRules
+    ' - user_interface: UserInterface
+    - players: list of Player
+    - curr_player: Player
+    - game_state: string
+}
+
+class GameView {
+
+}
+
+class GameConsoleView {
+
+}
+
+class BoardView {
+
+}
+
+class BoardConsoleView {
+
+}
+
+class GameController {
+    - view: Board
+    - model: Game
+
+    + run_game(): void
+}
+
+@enduml
