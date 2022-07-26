@@ -10,17 +10,21 @@ class GamesRules(ABC):
         self.players = players
 
     @abstractclassmethod
-    def is_valid_move(self, row, col):
+    def is_valid_move(self, row, col, curr_player: Player):
         pass
 
     @abstractclassmethod
-    def get_valid_moves(self, board, disk):
+    def get_valid_moves(self, curr_player: Player):
         pass
 
     @abstractclassmethod
-    def is_game_over(self, board):
+    def make_move(self, row, col, curr_player: Player):
         pass
 
     @abstractclassmethod
-    def get_winner(self, board):
+    def is_game_over(self):
+        pass
+
+    @abstractclassmethod
+    def get_winner(self):
         pass

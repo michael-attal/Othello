@@ -26,3 +26,6 @@ class GameConsoleView(GameView):
 
     def display_winner(self, player: Player):
         print(f"Congratualition {player.name}, you win!")
+
+    def display_no_winner(self, player: Player):
+        print("There is no winner, it's a perfect tie!")

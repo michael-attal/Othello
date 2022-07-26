@@ -40,7 +40,6 @@ class ClassicRules(GamesRules):
         if col < self.board.size - 2:
             if only_check_direction == "" or only_check_direction == "right":
                 right_cell = self.board.get_cell(row, col + 1)
-                print(right_cell)
         if row < self.board.size - 2:
             if only_check_direction == "" or only_check_direction == "bottom":
                 bottom_cell = self.board.get_cell(row + 1, col)
@@ -54,52 +53,74 @@ class ClassicRules(GamesRules):
         if top_cell != " " and top_cell != curr_player.symbol:
             # NOTE: Now check that one of the next next top cell is owned from curr_player to allow the move
             if row > 0:
-                is_next_next_curr_player = self.is_next_cells_valid(row - 1, col, curr_player, "top")
-                if is_next_next_curr_player == curr_player.symbol:
+                is_next_next_curr_player = self.is_next_cells_valid(row - 1, col, curr_player, "top", change_next_cells_to_curr_player)
+                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
+                    if change_next_cells_to_curr_player:
+                        self.board.update_cell(row, col, curr_player)
+                        self.board.update_cell(row - 1, col, curr_player)  # NOTE: To update the last cell
                     return True
 
         if top_left_cell != " " and top_left_cell != curr_player.symbol:
             if row > 0 and col > 0:
-                is_next_next_curr_player = self.is_next_cells_valid(row - 1, col - 1, curr_player, "top_left")
-                if is_next_next_curr_player == curr_player.symbol:
+                is_next_next_curr_player = self.is_next_cells_valid(row - 1, col - 1, curr_player, "top_left", change_next_cells_to_curr_player)
+                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
+                    if change_next_cells_to_curr_player:
+                        self.board.update_cell(row, col, curr_player)
+                        self.board.update_cell(row - 1, col - 1, curr_player)
                     return True
 
         if top_right_cell != " " and top_right_cell != curr_player.symbol:
             if row > 0 and col < self.board.size - 2:
-                is_next_next_curr_player = self.is_next_cells_valid(row - 1, col + 1, curr_player, "top_right")
-                if is_next_next_curr_player == curr_player.symbol:
+                is_next_next_curr_player = self.is_next_cells_valid(row - 1, col + 1, curr_player, "top_right", change_next_cells_to_curr_player)
+                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
+                    if change_next_cells_to_curr_player:
+                        self.board.update_cell(row, col, curr_player)
+                        self.board.update_cell(row - 1, col + 1, curr_player)
                     return True
 
         if left_cell != " " and left_cell != curr_player.symbol:
             if col > 0:
-                is_next_next_curr_player = self.is_next_cells_valid(row, col - 1, curr_player, "left")
-                if is_next_next_curr_player == curr_player.symbol:
+                is_next_next_curr_player = self.is_next_cells_valid(row, col - 1, curr_player, "left", change_next_cells_to_curr_player)
+                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
+                    if change_next_cells_to_curr_player:
+                        self.board.update_cell(row, col, curr_player)
+                        self.board.update_cell(row, col - 1, curr_player)
                     return True
 
         if right_cell != " " and right_cell != curr_player.symbol:
             if col < self.board.size - 2:
-                is_next_next_curr_player = self.is_next_cells_valid(row, col + 1, curr_player, "right")
-                print(is_next_next_curr_player)
-                if is_next_next_curr_player == curr_player.symbol:
+                is_next_next_curr_player = self.is_next_cells_valid(row, col + 1, curr_player, "right", change_next_cells_to_curr_player)
+                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
+                    if change_next_cells_to_curr_player:
+                        self.board.update_cell(row, col, curr_player)
+                        self.board.update_cell(row, col + 1, curr_player)
                     return True
 
         if bottom_cell != " " and bottom_cell != curr_player.symbol:
-            # NOTE: Now check that one of the next next top cell if owned from curr_player to allow the move
             if row < self.board.size - 2:
-                is_next_next_curr_player = self.is_next_cells_valid(row + 1, col, curr_player, "bottom")
-                if is_next_next_curr_player == curr_player.symbol:
+                is_next_next_curr_player = self.is_next_cells_valid(row + 1, col, curr_player, "bottom", change_next_cells_to_curr_player)
+                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
+                    if change_next_cells_to_curr_player:
+                        self.board.update_cell(row, col, curr_player)
+                        self.board.update_cell(row + 1, col, curr_player)
                     return True
 
         if bottom_left_cell != " " and bottom_left_cell != curr_player.symbol:
             if row < self.board.size - 2 and col > 0:
-                is_next_next_curr_player = self.is_next_cells_valid(row + 1, col - 1, curr_player, "bottom_left")
-                if is_next_next_curr_player == curr_player.symbol:
+                is_next_next_curr_player = self.is_next_cells_valid(row + 1, col - 1, curr_player, "bottom_left", change_next_cells_to_curr_player)
+                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
+                    if change_next_cells_to_curr_player:
+                        self.board.update_cell(row, col, curr_player)
+                        self.board.update_cell(row + 1, col - 1, curr_player)
                     return True
 
         if bottom_right_cell != " " and bottom_right_cell != curr_player.symbol:
             if row < self.board.size - 2 and col < self.board.size - 2:
-                is_next_next_curr_player = self.is_next_cells_valid(row + 1, col + 1, curr_player, "bottom_right")
-                if is_next_next_curr_player == curr_player.symbol:
+                is_next_next_curr_player = self.is_next_cells_valid(row + 1, col + 1, curr_player, "bottom_right", change_next_cells_to_curr_player)
+                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
+                    if change_next_cells_to_curr_player:
+                        self.board.update_cell(row, col, curr_player)
+                        self.board.update_cell(row + 1, col + 1, curr_player)
                     return True
 
         if (
@@ -119,14 +140,40 @@ class ClassicRules(GamesRules):
 
         return False
 
-    def get_valid_moves(self, board, disk):
-        # TODO Get every moves possible from actual board (loop all entries from the board and check if is_valid_move return True, then add this moves to the list)
-        pass
+    def get_valid_moves(self, curr_player: Player) -> list:
+        # NOTE: Get every moves possible from actual board
+        moveAvalaibles = []
+        for row in range(self.board.size):
+            for col in range(self.board.size):
+                if self.is_valid_move(row, col, curr_player):
+                    moveAvalaibles.append((row, col))
+        return moveAvalaibles
 
-    def is_game_over(self, board):
-        # TODO Check that no valid moves is possible from get_valid_moves and then return true
-        return False
+    def make_move(self, row, col, curr_player: Player):
+        # NOTE: Update all cells between the new one and the old one from board
+        self.is_next_cells_valid(row, col, curr_player, "", True)
+        # self.board.update_cell(row, col, curr_player)
+
+    def is_game_over(self):
+        # NOTE: Check that no valid moves is possible for any players
+        for player in self.players:
+            if len(self.get_valid_moves(player)) > 0:
+                return False
+        return True
 
     def get_winner(self):
-        # TODO Check board.mat value and return the player who have the most symbol in the matrice. If it's equal return None
-        return self.players[0]
+        # NOTE: Return the player who have the most symbol in the matrice. If it's equal return None
+        count_symbols_player_one = 0
+        count_symbols_player_two = 0
+        for row in range(self.board.size):
+            for col in range(self.board.size):
+                if self.board.get_cell(row, col) == self.players[0].symbol:
+                    count_symbols_player_one += 1
+                elif self.board.get_cell(row, col) == self.players[1].symbol:
+                    count_symbols_player_two += 1
+        if count_symbols_player_one > count_symbols_player_two:
+            return self.players[0]
+        elif count_symbols_player_two > count_symbols_player_one:
+            return self.players[1]
+        else:
+            return None

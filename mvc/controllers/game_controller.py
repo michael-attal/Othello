@@ -9,7 +9,7 @@ class GameController:
         self.view = gameView
 
     def run_game(self):
-        while not self.model.rules.is_game_over(self.model.board):
+        while not self.model.rules.is_game_over():
             self.view.draw_board()
 
             row, col = self.view.get_move(self.model.curr_player)
@@ -18,9 +18,11 @@ class GameController:
                 self.view.display_not_valid_move()
                 row, col = self.view.get_move(self.model.curr_player)
 
-            self.model.make_move(row, col, self.model.curr_player)
+            self.model.rules.make_move(row, col, self.model.curr_player)
             self.model.change_player()
 
         player = self.model.rules.get_winner()
         if player:
             self.view.display_winner(player)
+        else:
+            self.view.display_no_winner()
