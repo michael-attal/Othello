@@ -1,6 +1,3 @@
-# from models.disk import Disk
-# from models.color import Color
-# from models.position import Position
 from models.player import Player
 
 

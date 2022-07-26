@@ -141,7 +141,7 @@ class ClassicRules(GamesRules):
         return False
 
     def get_valid_moves(self, curr_player: Player) -> list:
-        # NOTE: Get every moves possible from actual board
+        # NOTE: Get every moves possible from actual board for a player
         moveAvalaibles = []
         for row in range(self.board.size):
             for col in range(self.board.size):
@@ -152,7 +152,6 @@ class ClassicRules(GamesRules):
     def make_move(self, row, col, curr_player: Player):
         # NOTE: Update all cells between the new one and the old one from board
         self.is_next_cells_valid(row, col, curr_player, "", True)
-        # self.board.update_cell(row, col, curr_player)
 
     def is_game_over(self):
         # NOTE: Check that no valid moves is possible for any players
