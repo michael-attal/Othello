@@ -11,7 +11,7 @@ players = []
 players.append(HumanPlayer("Michaël", "X"))
 players.append(HumanPlayer("Jeff", "O"))
 board = Board(8, players)
-rules = ClassicRules(board, players, players[0])
+rules = ClassicRules(board, players)
 # interface = ConsoleUserInterface(rules, players, players[0], "start")
 gameModel = Game(board, rules, players)
 GameView = GameConsoleView(gameModel)

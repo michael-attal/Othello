@@ -4,7 +4,7 @@ from models.player import Player
 
 
 class Game:
-    def __init__(self, board: Board, rules: GamesRules, players: Player):
+    def __init__(self, board: Board, rules: GamesRules, players: list[Player]):
         self.board = board
         self.rules = rules
         self.players = players
@@ -12,6 +12,7 @@ class Game:
 
     def make_move(self, row, col, player: Player):
         self.board.update_cell(row, col, player)
+        # TODO Update all cells between the new one and the old one from board
 
     def change_player(self):
         if self.curr_player == self.players[0]:

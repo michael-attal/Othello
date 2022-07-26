@@ -13,6 +13,9 @@ class GameConsoleView(GameView):
         print(f"{curr_player.name} it's your turn (You play {curr_player.symbol} symbol)")
         s = input("Enter your move (row, col):").split(",")
         row, col = int(s[0]), int(s[1])
+        # NOTE: Becase board_console_view add one row and one col to show which case has which num we must minus by one the number getted from player.
+        row -= 1
+        col -= 1
         return row, col
 
     def draw_board(self):

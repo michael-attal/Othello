@@ -5,10 +5,9 @@ from models.player import Player
 
 
 class GamesRules(ABC):
-    def __init__(self, board: Board, players, current_player: Player):
+    def __init__(self, board: Board, players: list[Player]):
         self.board = board
         self.players = players
-        self.current_player = current_player
 
     @abstractclassmethod
     def is_valid_move(self, row, col):

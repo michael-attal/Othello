@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 
+from models.game import Game
+
 
 class GameView(ABC):
-    def __init__(self, gameModel) -> None:
+    def __init__(self, gameModel: Game):
         self.game = gameModel
 
     @abstractmethod

@@ -1,3 +1,4 @@
+from views.game_console_view import GameConsoleView
 from views.game_view import GameView
 from models.game import Game
 
@@ -12,8 +13,9 @@ class GameController:
             self.view.draw_board()
 
             row, col = self.view.get_move(self.model.curr_player)
-            while not self.model.rules.is_valid_move(row, col):
-                self.view.display_not_valid_move(player)
+
+            while not self.model.rules.is_valid_move(row, col, self.model.curr_player):
+                self.view.display_not_valid_move()
                 row, col = self.view.get_move(self.model.curr_player)
 
             self.model.make_move(row, col, self.model.curr_player)
