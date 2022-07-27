@@ -24,6 +24,9 @@ class GameConsoleView(GameView):
     def display_not_valid_move(self):
         print("Error! Please enter a correct move")
 
+    def display_ia_move(self, row, col):
+        print(f"IA played row: {(row) +1} and col: {(col)+1}.")  # NOTE: Don't forget to add +1 to show correct formatted row and col selected by IA
+
     def display_winner(self, player: Player):
         print(f"Congratualition {player.name}, you win!")
 

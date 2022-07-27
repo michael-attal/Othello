@@ -1,6 +1,8 @@
+from copy import deepcopy
 from models.games_rules import GamesRules
 from models.board import Board
 from models.player import Player
+from models.ia import IA
 
 
 class ClassicRules(GamesRules):
@@ -148,6 +150,36 @@ class ClassicRules(GamesRules):
                 if self.is_valid_move(row, col, curr_player):
                     moveAvalaibles.append((row, col))
         return moveAvalaibles
+
+    def get_highest_scored_move_for_ia(self, ia: IA):
+        move_availables = self.get_valid_moves(ia)
+        backupMat = deepcopy(self.board.mat)
+        moves_with_count_symbols_available_for_ia = {}
+
+        for move_available in move_availables:
+            row = move_available[0]
+            col = move_available[1]
+            self.make_move(row, col, ia)
+            count_symbols_ia = 0
+            for i in range(self.board.size):
+                for j in range(self.board.size):
+                    if self.board.get_cell(i, j) == ia.symbol:
+                        count_symbols_ia += 1
+            dict_index_formatted = f"{str(row)},{str(col)}"
+            moves_with_count_symbols_available_for_ia[dict_index_formatted] = count_symbols_ia
+            self.board.mat = deepcopy(backupMat)
+
+        move_to_make = ""
+        highest_count_symbols = 0
+        for move, count_symbols in moves_with_count_symbols_available_for_ia.items():
+            if count_symbols > highest_count_symbols:
+                highest_count_symbols = count_symbols
+                move_to_make = move
+
+        move_to_make = move_to_make.split(",")
+        move_to_make[0] = int(move_to_make[0])
+        move_to_make[1] = int(move_to_make[1])
+        return move_to_make
 
     def make_move(self, row, col, curr_player: Player):
         # NOTE: Update all cells between the new one and the old one from board

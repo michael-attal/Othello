@@ -1,30 +1,5 @@
 @startuml Othello Diagram
 
-' class Disk {
-'     - color: Color
-'     - position: Position
-
-'     + Disk(color: Color, position: Position)
-'     + get_color(): Color
-'     + get_position(): Position
-'     + set_position(position: Position): void
-' }
-
-' class Position {
-'     - x: int
-'     - y: int
-
-'     + Position(x: int, y: int)
-'     + get_x(): int
-'     + get_y(): int
-' }
-
-' class Color {
-'     - name: string
-
-'     + get_name(): string
-' }
-
 class Board {
     - size: int
     - number_of_disk_to_start: int
@@ -61,21 +36,6 @@ ClassicRules <|-- GameRules
 class ClassicRules {
     + ClassicRules(board: board, players: list of Player)
 }
-
-' abstract class UserInterface {
-'     - board: Board
-'     - rules: GamesRules
-'     - players: list of Player
-'     - game_state: string
-'     - player_turn : Player
-
-
-' }
-
-' ConsoleUserInterface <|-- UserInterface
-' class ConsoleUserInterface {
-'     + ConsoleUserInterface(board: board, rules: rules,  list of Player: players, player_turn: players[0])
-' }
 
 class Game {
     - board: Board
