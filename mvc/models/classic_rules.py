@@ -1,4 +1,6 @@
 from copy import deepcopy
+
+from numpy import Infinity
 from models.games_rules import GamesRules
 from models.board import Board
 from models.player import Player
@@ -153,7 +155,7 @@ class ClassicRules(GamesRules):
 
     def get_highest_scored_move_for_ia(self, ia: IA):
         move_availables = self.get_valid_moves(ia)
-        backupMat = deepcopy(self.board.mat)
+        backup_mat = deepcopy(self.board.mat)
         moves_with_count_symbols_available_for_ia = {}
 
         for move_available in move_availables:
@@ -167,7 +169,7 @@ class ClassicRules(GamesRules):
                         count_symbols_ia += 1
             dict_index_formatted = f"{str(row)},{str(col)}"
             moves_with_count_symbols_available_for_ia[dict_index_formatted] = count_symbols_ia
-            self.board.mat = deepcopy(backupMat)
+            self.board.mat = deepcopy(backup_mat)
 
         move_to_make = ""
         highest_count_symbols = 0
@@ -181,6 +183,117 @@ class ClassicRules(GamesRules):
         move_to_make[1] = int(move_to_make[1])
         return move_to_make
 
+    def get_move_for_ia(self, ia: IA):
+        # Todo change depth depending on ia diffuclty
+        backup_mat = deepcopy(self.board.mat)
+        best_move_value = float(-Infinity)
+        best_row = 0
+        best_col = 0
+        depth = 2
+        if ia.difficulty == "very_hard":
+            depth = 4
+        elif ia.difficulty == "hard":
+            depth = 3
+        elif ia.difficulty == "medium":
+            depth = 2
+        elif ia.difficulty == "easy":
+            depth = 1
+
+        move_availables = self.get_valid_moves(ia)
+
+        for move_available in move_availables:
+            row = move_available[0]
+            col = move_available[1]
+            backup_mat = deepcopy(self.board.mat)
+            self.make_move(row, col, ia)
+            score_current_move = self.minimax(ia, True, depth)
+            self.board.mat = deepcopy(backup_mat)
+            if score_current_move >= best_move_value:
+                best_move_value = score_current_move
+                best_row = row
+                best_col = col
+
+        print("best_move_value:", best_move_value)
+        print("best_row:", best_row)
+        print("best_col:", best_col)
+        return best_row, best_col
+
+    def minimax(self, curr_player: Player, is_maximizing: bool, depth: int = 2):
+        """Get the best move to play for the current player from the board. Its must often used for IA, but can also be used if we want to implement a "hint" function. Atm it's only used by IA.
+
+        Args:
+            curr_player (Player): The current player to evaluate
+            depth (int): The depth to get the minimax value (should not exceed 4 or it take to much time)
+            is_maximizing (bool): Used to know if we are trying to get the highest value or the lowest (minimizing)
+
+        Returns:
+            int: A number that evaluted the board.
+        """
+
+        is_game_over = self.is_game_over()
+        if depth == 0 or is_game_over:
+            if is_game_over:
+                winner = self.get_winner()
+                if curr_player == winner:
+                    return 1
+                elif winner == None:
+                    return 0
+                else:
+                    return -1
+            else:
+                # We are on the lowest depth, stop computation just return if curr player has more symbols (1), less (-1) or equal (0)
+                # Later use heurestic function to calculate also if the actual player has some corners (0,0 | 0,size-1 | size-1,0 | size-1,size-1) which is a very good position and add score to the evaluated value
+                symbol_curr_player = curr_player.symbol
+                symbol_player_two = self.players[0].symbol
+                if symbol_player_two == symbol_curr_player:
+                    symbol_player_two = self.players[1].symbol
+
+                count_symbols = self.get_count_symbols_of_players()
+                if count_symbols[symbol_curr_player] > count_symbols[symbol_player_two]:
+                    return 1
+                elif count_symbols[symbol_player_two] > count_symbols[symbol_curr_player]:
+                    return -1
+                else:
+                    return 0
+
+        if is_maximizing:
+            max_evaluate_value = float(-Infinity)
+            # We make the move, and for each move we get the best value from them.
+            move_availables = self.get_valid_moves(curr_player)
+
+            for move_available in move_availables:
+                opponent = self.players[0]
+                if opponent == curr_player:
+                    opponent = self.players[1]
+                row = move_available[0]
+                col = move_available[1]
+                backup_mat = deepcopy(self.board.mat)
+                self.make_move(row, col, curr_player)
+                evaluated_opponent_move = self.minimax(opponent, False, depth - 1)
+                max_evaluate_value = max(max_evaluate_value, evaluated_opponent_move)
+                self.board.mat = deepcopy(backup_mat)  # Get back to the original board
+            return max_evaluate_value
+
+        else:
+            min_evaluate_value = float(Infinity)
+            move_availables = self.get_valid_moves(curr_player)
+
+            for move_available in move_availables:
+                opponent = self.players[0]
+                if opponent == curr_player:
+                    opponent = self.players[1]
+                row = move_available[0]
+                col = move_available[1]
+                backup_mat = deepcopy(self.board.mat)
+                self.make_move(row, col, curr_player)
+                evaluated_opponent_move = self.minimax(opponent, True, depth - 1)
+                min_evaluate_value = min(min_evaluate_value, evaluated_opponent_move)
+                self.board.mat = deepcopy(backup_mat)  # Get back to the original board
+            return min_evaluate_value
+
+    def heuristic_othello(self):
+        pass
+
     def make_move(self, row, col, curr_player: Player):
         # NOTE: Update all cells between the new one and the old one from board
         self.is_next_cells_valid(row, col, curr_player, "", True)
@@ -192,8 +305,7 @@ class ClassicRules(GamesRules):
                 return False
         return True
 
-    def get_winner(self):
-        # NOTE: Return the player who have the most symbol in the matrice. If it's equal return None
+    def get_count_symbols_of_players(self):
         count_symbols_player_one = 0
         count_symbols_player_two = 0
         for row in range(self.board.size):
@@ -202,9 +314,17 @@ class ClassicRules(GamesRules):
                     count_symbols_player_one += 1
                 elif self.board.get_cell(row, col) == self.players[1].symbol:
                     count_symbols_player_two += 1
-        if count_symbols_player_one > count_symbols_player_two:
+
+        return {self.players[0].symbol: count_symbols_player_one, self.players[1].symbol: count_symbols_player_two}
+
+    def get_winner(self):
+        # NOTE: Return the player who have the most symbol in the matrice. If it's equal return None
+        symbol_player_one = self.players[0].symbol
+        symbol_player_two = self.players[1].symbol
+        count_symbols = self.get_count_symbols_of_players()
+        if count_symbols[symbol_player_one] > count_symbols[symbol_player_two]:
             return self.players[0]
-        elif count_symbols_player_two > count_symbols_player_one:
+        elif count_symbols[symbol_player_two] > count_symbols[symbol_player_one]:
             return self.players[1]
         else:
             return None

@@ -15,7 +15,8 @@ class GameController:
             if len(self.model.rules.get_valid_moves(self.model.curr_player)) > 0:
                 self.view.draw_board()
                 if isinstance(self.model.curr_player, IA):
-                    move = self.model.rules.get_highest_scored_move_for_ia(self.model.curr_player)
+                    # move = self.model.rules.get_highest_scored_move_for_ia(self.model.curr_player)
+                    move = self.model.rules.get_move_for_ia(self.model.curr_player)
                     row = move[0]
                     col = move[1]
                     if isinstance(self.view, GameConsoleView):  # NOTE: Show a print line with the move selected by IA for better ux experience.
@@ -31,6 +32,8 @@ class GameController:
 
             self.model.change_player()
 
+        # NOTE Draw the final board before showing winner
+        self.view.draw_board()
         player = self.model.rules.get_winner()
         if player:
             self.view.display_winner(player)

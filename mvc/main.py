@@ -9,9 +9,10 @@ from controllers.game_controller import GameController
 
 players = []
 players.append(HumanPlayer("Michaël", "X"))
-players.append(IA("Terminator", "O", "easy"))
+players.append(IA("Terminator", "O", "medium"))
 # players.append(HumanPlayer("Jeff", "O"))
-board = Board(8, players)
+SIZE_BOARD = 8
+board = Board(SIZE_BOARD, players)
 rules = ClassicRules(board, players)
 gameModel = Game(board, rules, players)
 GameView = GameConsoleView(gameModel)

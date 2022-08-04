@@ -27,6 +27,10 @@ class GamesRules(ABC):
         pass
 
     @abstractclassmethod
+    def get_move_for_ia(self, ia: IA):
+        pass
+
+    @abstractclassmethod
     def is_game_over(self):
         pass
 
