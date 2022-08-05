@@ -7,4 +7,4 @@ class HumanPlayer(Player):
         super().__init__(name, symbol)
 
     def get_hint_move(self, rules: GamesRules):
-        return super().get_a_move(rules, 4)  # TODO Ask the user the strongness of the hint
+        return super().get_a_move(rules, 4)  # TODO Ask to the user the strongness of the hint he want

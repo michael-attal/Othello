@@ -87,37 +87,32 @@ class Player(ABC):
 
         if is_maximizing:
             max_evaluate_value = float(-Infinity)
-            # NOTE: We make the move, and for each move we get the best value from them.
-            move_availables = rules.get_valid_moves(curr_player)
-
-            for move_available in move_availables:
-                opponent = rules.players[0]
-                if opponent == curr_player:
-                    opponent = rules.players[1]
-                row = move_available[0]
-                col = move_available[1]
-                backup_mat = deepcopy(rules.board.mat)
-                rules.make_move(row, col, curr_player)
-                evaluated_opponent_move = self.minimax(rules, opponent, False, depth - 1)
-                max_evaluate_value = max(max_evaluate_value, evaluated_opponent_move)
-                rules.board.mat = deepcopy(backup_mat)  # NOTE: Get back to the previous board
-            return max_evaluate_value
-
+            is_next_evaluated_move_maximizing = False
         else:
             min_evaluate_value = float(Infinity)
-            move_availables = rules.get_valid_moves(curr_player)
+            is_next_evaluated_move_maximizing = True
 
-            for move_available in move_availables:
-                opponent = rules.players[0]
-                if opponent == curr_player:
-                    opponent = rules.players[1]
-                row = move_available[0]
-                col = move_available[1]
-                backup_mat = deepcopy(rules.board.mat)
-                rules.make_move(row, col, curr_player)
-                evaluated_opponent_move = self.minimax(rules, opponent, True, depth - 1)
+        # NOTE: We make the move, and for each move we get the best value from them.
+        move_availables = rules.get_valid_moves(curr_player)
+
+        for move_available in move_availables:
+            opponent = rules.players[0]
+            if opponent == curr_player:
+                opponent = rules.players[1]
+            row = move_available[0]
+            col = move_available[1]
+            backup_mat = deepcopy(rules.board.mat)
+            rules.make_move(row, col, curr_player)
+            evaluated_opponent_move = self.minimax(rules, opponent, is_next_evaluated_move_maximizing, depth - 1)
+            rules.board.mat = deepcopy(backup_mat)  # NOTE: Get back to the previous board
+            if is_maximizing:
+                max_evaluate_value = max(max_evaluate_value, evaluated_opponent_move)
+            else:
                 min_evaluate_value = min(min_evaluate_value, evaluated_opponent_move)
-                rules.board.mat = deepcopy(backup_mat)
+
+        if is_maximizing:
+            return max_evaluate_value
+        else:
             return min_evaluate_value
 
     def heuristic_othello(self):
