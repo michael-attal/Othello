@@ -1,21 +1,10 @@
-from models.game import Game
-from models.board import Board
-from models.human_player import HumanPlayer
-from models.classic_rules import ClassicRules
-from models.ia import IA
-
-from views.game_console_view import GameConsoleView
 from controllers.game_controller import GameController
 
-players = []
-players.append(HumanPlayer("Michaël", "X"))
-players.append(IA("Terminator", "O", "medium"))
-# players.append(HumanPlayer("Jeff", "O"))
-SIZE_BOARD = 8
-board = Board(SIZE_BOARD, players)
-rules = ClassicRules(board, players)
-gameModel = Game(board, rules, players)
-GameView = GameConsoleView(gameModel)
-controller = GameController(gameModel, GameView)
 
-controller.run_game()
+controller = GameController("console")
+
+# NOTE: Get the information needed to start the game, like player name and opponent...
+game_option_selected = controller.init_game()
+# NOTE: If the user has not selected to exit the game and if no error occurs during the initialization of the game, then start the game.
+if game_option_selected != "exit" and game_option_selected != "error":
+    controller.run_game()

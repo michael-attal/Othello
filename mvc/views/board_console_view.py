@@ -23,6 +23,5 @@ class BoardConsoleView(BoardView):
                 else:
                     cell = self.board.get_cell(i - 1, j - 1)  # NOTE: Remove one because the board console view ask to enter a row and col starting by 1
                     print(f"| {cell} ", end="")
-            # if j != board_size - 1:
             print("|")
             print(footer)
