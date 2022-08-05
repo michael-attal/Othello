@@ -12,7 +12,7 @@ class Player(ABC):
     # NOTE: Get a move is used to get a move for the AI but also for a futur implementation of a get hint method for a player. That's why the minimax implementation is done here
     # TODO: Implement a get hint choice (ex: when user is asked to enter row and col, if he enter hint, suggest a move)
     def get_a_move(self, rules, move_level=2) -> tuple:
-        """Get a move for the AI or if the player ask for a hint move.
+        """Get a move for the AI or the player if he ask for a hint move.
 
         Args:
             rules (GamesRules): The current game rules (needed, because some custom rules can be applied when checking a move, make a move...)
