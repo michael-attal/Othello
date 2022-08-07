@@ -19,11 +19,11 @@ class AI(Player):
         return "easy"
 
     @staticmethod
-    def get_ai_difficulty_integer_from_difficulty_name(difficulty_name):
+    def get_ai_difficulty_key_from_difficulty_value(difficulty_value):
         for key, value in AI.difficulty.items():
-            if value == difficulty_name:
+            if value == difficulty_value:
                 return key
-        # NOTE Always return easy mode if no corresponding difficulty_name is finded (just in case)
+        # NOTE Always return easy mode if no corresponding difficulty_value is finded (just in case)
         return "1"
 
     def __init__(self, name, symbol, difficulty="medium"):
@@ -31,7 +31,7 @@ class AI(Player):
         self.difficulty = difficulty
 
     def get_move(self, rules):
-        return super().get_a_move(rules, int(self.get_ai_difficulty_integer_from_difficulty_name(self.difficulty)))
+        return super().get_a_move(rules, int(self.get_ai_difficulty_key_from_difficulty_value(self.difficulty)))
 
     # NOTE: This method isn't used anymore, since the easy mode (one depth and no heuristic function) of minimax is doing the same has this method - Just let it here because it was a requirement of the part 3 of this project (before implementing minimax algorithm).
     def get_highest_scored_move(self, rules):

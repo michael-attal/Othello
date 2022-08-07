@@ -92,10 +92,15 @@ class GameController:
 
             self.model.change_player()
 
-        # NOTE Draw the final board before showing winner
+        # NOTE: Draw the final board before showing winner
         self.view.draw_board()
-        player = self.model.rules.get_winner()
-        if player:
-            self.view.display_winner(player)
+
+        winner = self.model.rules.get_winner()
+
+        # NOTE: Save the game score and winner into a file
+        self.model.save_game_result(self.model.players, winner, self.model.rules.get_count_symbols_of_players())
+
+        if winner:
+            self.view.display_winner(winner)
         else:
             self.view.display_no_winner()

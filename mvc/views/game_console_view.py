@@ -52,8 +52,17 @@ class GameConsoleView(GameView):
 
     def get_move(self, curr_player: Player):
         print(f"{curr_player.name} it's your turn (You play {curr_player.symbol} symbol)")
-        s = input("Enter your move (row, col):").split(",")
-        row, col = int(s[0]), int(s[1])
+        # TODO: Allow to enter "hint" if a player want to get a hint move.
+        user_input_valid = False
+        while user_input_valid == False:
+            try:
+                s = input("Enter your move (row, col):").split(",")
+                row, col = int(s[0]), int(s[1])
+                user_input_valid = True
+            except ValueError:
+                print("Value provided is not correct, please provide a valid input ex: 1,4")
+            except:
+                print("An error occurs, please provide a valid input ex: 1,4")
         # NOTE: Because board_console_view add one row and one col to show which cell has which num we must minus by one the number getted from player.
         row -= 1
         col -= 1

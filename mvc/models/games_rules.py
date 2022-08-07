@@ -26,5 +26,9 @@ class GamesRules(ABC):
         pass
 
     @abstractclassmethod
+    def get_count_symbols_of_players(self):
+        pass
+
+    @abstractclassmethod
     def get_winner(self):
         pass
