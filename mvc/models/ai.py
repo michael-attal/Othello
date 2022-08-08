@@ -30,11 +30,11 @@ class AI(Player):
         super().__init__(name, symbol)
         self.difficulty = difficulty
 
-    def get_move(self, rules):
+    def get_move(self, rules) -> tuple:
         return super().get_a_move(rules, int(self.get_ai_difficulty_key_from_difficulty_value(self.difficulty)))
 
     # NOTE: This method isn't used anymore, since the easy mode (one depth and no heuristic function) of minimax is doing the same has this method - Just let it here because it was a requirement of the part 3 of this project (before implementing minimax algorithm).
-    def get_highest_scored_move(self, rules):
+    def get_highest_scored_move(self, rules) -> list:
         move_availables = rules.get_valid_moves(self)
         backup_mat = deepcopy(rules.board.mat)
         moves_with_count_symbols_available_for_ia = {}
