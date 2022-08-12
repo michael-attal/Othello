@@ -1,7 +1,10 @@
-from controllers.game_controller import GameController
+from controllers.game_console_controller import GameConsoleController
+from controllers.game_gui_controller import GameGuiController
 
 
-controller = GameController("console")
+controllerConsole = GameConsoleController()
+controllerGui = GameGuiController()  # NOTE: Still not implemented (will only display available cases and current disks players on the board)
+controller = controllerConsole
 
 # NOTE: Get the information needed to start the game, like player name and opponent...
 game_option_selected = controller.init_game()

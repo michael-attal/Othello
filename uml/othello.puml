@@ -1,10 +1,9 @@
 @startuml Othello Diagram
 
 class Board {
+    - players: list of Player
     - size: int
     - number_of_disk_to_start: int
-    - players: list of Player
-    - disks: list of Disk
 }
 
 abstract class Player {
@@ -40,17 +39,22 @@ class ClassicRules {
 class Game {
     - board: Board
     - rules: GameRules
-    ' - user_interface: UserInterface
     - players: list of Player
     - curr_player: Player
-    - game_state: string
+
+    + save_game_result():
+
 }
 
 class GameView {
 
 }
 
-class GameConsoleView {
+class GameConsoleView <|-- GameView {
+
+}
+
+class GameGuiView <|-- GameView{
 
 }
 
@@ -58,14 +62,27 @@ class BoardView {
 
 }
 
-class BoardConsoleView {
+class BoardConsoleView <|-- BoardView {
 
 }
 
-class GameController {
+class BoardGuiView <|-- BoardView {
+
+}
+
+class GameConsoleController {
     - view: Board
     - model: Game
 
+    + init_game(): str
+    + run_game(): void
+}
+
+class GameGuiController {
+    - view: Board
+    - model: Game
+
+    + init_game(): str
     + run_game(): void
 }
 
