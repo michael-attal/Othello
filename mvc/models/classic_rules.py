@@ -16,127 +16,51 @@ class ClassicRules(GamesRules):
                         return True
         return False
 
-    def is_next_cells_valid(self, row, col, curr_player: Player, only_check_direction="", change_next_cells_to_curr_player=False):
-        top_cell = " "
-        top_left_cell = " "
-        top_right_cell = " "
-        left_cell = " "
-        right_cell = " "
-        bottom_cell = " "
-        bottom_left_cell = " "
-        bottom_right_cell = " "
-        if row > 0:
-            if only_check_direction == "" or only_check_direction == "top":
-                top_cell = self.board.get_cell(row - 1, col)
-            if col > 0:
-                if only_check_direction == "" or only_check_direction == "top_left":
-                    top_left_cell = self.board.get_cell(row - 1, col - 1)
-            if col < self.board.size - 2:
-                if only_check_direction == "" or only_check_direction == "top_right":
-                    top_right_cell = self.board.get_cell(row - 1, col + 1)
-        if col > 0:
-            if only_check_direction == "" or only_check_direction == "left":
-                left_cell = self.board.get_cell(row, col - 1)
-        if col < self.board.size - 2:
-            if only_check_direction == "" or only_check_direction == "right":
-                right_cell = self.board.get_cell(row, col + 1)
-        if row < self.board.size - 2:
-            if only_check_direction == "" or only_check_direction == "bottom":
-                bottom_cell = self.board.get_cell(row + 1, col)
-            if col > 0:
-                if only_check_direction == "" or only_check_direction == "bottom_left":
-                    bottom_left_cell = self.board.get_cell(row + 1, col - 1)
-            if col < self.board.size - 2:
-                if only_check_direction == "" or only_check_direction == "bottom_right":
-                    bottom_right_cell = self.board.get_cell(row + 1, col + 1)
+    def is_next_cells_valid(self, row, col, current_player, only_check_direction="", change_next_cells_to_current_player=False):
+        directions = {
+            "top": (-1, 0),
+            "top_left": (-1, -1),
+            "top_right": (-1, 1),
+            "left": (0, -1),
+            "right": (0, 1),
+            "bottom": (1, 0),
+            "bottom_left": (1, -1),
+            "bottom_right": (1, 1),
+        }
 
-        if top_cell != " " and top_cell != curr_player.symbol:
-            # NOTE: Now check that one of the next next top cell is owned from curr_player to allow the move
-            if row > 0:
-                is_next_next_curr_player = self.is_next_cells_valid(row - 1, col, curr_player, "top", change_next_cells_to_curr_player)
-                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
-                    if change_next_cells_to_curr_player:
-                        self.board.update_cell(row, col, curr_player)
-                        self.board.update_cell(row - 1, col, curr_player)  # NOTE: To update the last cell
+        def is_valid_position(row_idx, col_idx):
+            return 0 <= row_idx < self.board.size and 0 <= col_idx < self.board.size
+
+        def check_direction(direction):
+            row_delta, col_delta = directions[direction]
+            next_row, next_col = row + row_delta, col + col_delta
+            if not is_valid_position(next_row, next_col):
+                return False
+            cell = self.board.get_cell(next_row, next_col)
+            if cell == " " or cell == current_player.symbol:
+                return False
+
+            while True:
+                next_row, next_col = next_row + row_delta, next_col + col_delta
+                if not is_valid_position(next_row, next_col):
+                    return False
+                cell = self.board.get_cell(next_row, next_col)
+                if cell == " ":
+                    return False
+                if cell == current_player.symbol:
+                    if change_next_cells_to_current_player:
+                        while (next_row - row_delta, next_col - col_delta) != (row, col):
+                            next_row, next_col = next_row - row_delta, next_col - col_delta
+                            self.board.update_cell(next_row, next_col, current_player)
+                        self.board.update_cell(row, col, current_player)
                     return True
 
-        if top_left_cell != " " and top_left_cell != curr_player.symbol:
-            if row > 0 and col > 0:
-                is_next_next_curr_player = self.is_next_cells_valid(row - 1, col - 1, curr_player, "top_left", change_next_cells_to_curr_player)
-                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
-                    if change_next_cells_to_curr_player:
-                        self.board.update_cell(row, col, curr_player)
-                        self.board.update_cell(row - 1, col - 1, curr_player)
+        if only_check_direction:
+            return check_direction(only_check_direction)
+        else:
+            for direction in directions:
+                if check_direction(direction):
                     return True
-
-        if top_right_cell != " " and top_right_cell != curr_player.symbol:
-            if row > 0 and col < self.board.size - 2:
-                is_next_next_curr_player = self.is_next_cells_valid(row - 1, col + 1, curr_player, "top_right", change_next_cells_to_curr_player)
-                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
-                    if change_next_cells_to_curr_player:
-                        self.board.update_cell(row, col, curr_player)
-                        self.board.update_cell(row - 1, col + 1, curr_player)
-                    return True
-
-        if left_cell != " " and left_cell != curr_player.symbol:
-            if col > 0:
-                is_next_next_curr_player = self.is_next_cells_valid(row, col - 1, curr_player, "left", change_next_cells_to_curr_player)
-                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
-                    if change_next_cells_to_curr_player:
-                        self.board.update_cell(row, col, curr_player)
-                        self.board.update_cell(row, col - 1, curr_player)
-                    return True
-
-        if right_cell != " " and right_cell != curr_player.symbol:
-            if col < self.board.size - 2:
-                is_next_next_curr_player = self.is_next_cells_valid(row, col + 1, curr_player, "right", change_next_cells_to_curr_player)
-                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
-                    if change_next_cells_to_curr_player:
-                        self.board.update_cell(row, col, curr_player)
-                        self.board.update_cell(row, col + 1, curr_player)
-                    return True
-
-        if bottom_cell != " " and bottom_cell != curr_player.symbol:
-            if row < self.board.size - 2:
-                is_next_next_curr_player = self.is_next_cells_valid(row + 1, col, curr_player, "bottom", change_next_cells_to_curr_player)
-                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
-                    if change_next_cells_to_curr_player:
-                        self.board.update_cell(row, col, curr_player)
-                        self.board.update_cell(row + 1, col, curr_player)
-                    return True
-
-        if bottom_left_cell != " " and bottom_left_cell != curr_player.symbol:
-            if row < self.board.size - 2 and col > 0:
-                is_next_next_curr_player = self.is_next_cells_valid(row + 1, col - 1, curr_player, "bottom_left", change_next_cells_to_curr_player)
-                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
-                    if change_next_cells_to_curr_player:
-                        self.board.update_cell(row, col, curr_player)
-                        self.board.update_cell(row + 1, col - 1, curr_player)
-                    return True
-
-        if bottom_right_cell != " " and bottom_right_cell != curr_player.symbol:
-            if row < self.board.size - 2 and col < self.board.size - 2:
-                is_next_next_curr_player = self.is_next_cells_valid(row + 1, col + 1, curr_player, "bottom_right", change_next_cells_to_curr_player)
-                if is_next_next_curr_player == curr_player.symbol or is_next_next_curr_player == True:
-                    if change_next_cells_to_curr_player:
-                        self.board.update_cell(row, col, curr_player)
-                        self.board.update_cell(row + 1, col + 1, curr_player)
-                    return True
-
-        if (
-            top_cell == curr_player.symbol
-            or top_right_cell == curr_player.symbol
-            or top_left_cell == curr_player.symbol
-            or left_cell == curr_player.symbol
-            or right_cell == curr_player.symbol
-            or bottom_cell == curr_player.symbol
-            or bottom_right_cell == curr_player.symbol
-            or bottom_left_cell == curr_player.symbol
-        ):
-            return curr_player.symbol
-
-        if top_cell == " " or top_right_cell == " " or top_left_cell == " " or left_cell == " " or right_cell == " " or bottom_cell == " " or bottom_right_cell == " " or bottom_left_cell == " ":
-            return " "
 
         return False
 
